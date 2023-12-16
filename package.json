@@ -1,0 +1,23 @@
+{
+  "name": "avanzadodiciembre",
+  "version": "1.0.0",
+  "description": "CursoAsterisk",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/giandiego/AvanzadoDiciembre.git"
+  },
+  "keywords": [
+    "asterisk"
+  ],
+  "author": "Gian Diego Javes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/giandiego/AvanzadoDiciembre/issues"
+  },
+  "homepage": "https://github.com/giandiego/AvanzadoDiciembre#readme"
+}
