@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"channel\": \"PJSIP/5000\",\r\n  \"context\": \"test-manager\",\r\n  \"exten\": \"s\",\r\n  \"priority\": 1,\r\n  \"callerid\" : \"el pepe <postman>\",\r\n  \"variables\": {\r\n    \"var1\": \"value1\",\r\n    \"var2\": \"value2\"\r\n  }\r\n}",
+					"raw": "{\r\n  \"channel\": \"Local/1234@DIALER/n\",\r\n  \"context\": \"TTS\",\r\n  \"exten\": \"s\",\r\n  \"priority\": 1,\r\n  \"callerid\" : \"el pepe <postman>\",\r\n  \"variables\": {\r\n    \"tts\": \"Hola mi nombre es ricardo....\",\r\n    \"var2\": \"value2\"\r\n  }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -32,6 +32,130 @@
 						"v1",
 						"asterisk",
 						"HacerUnaLlamada"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SipCreate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"Action\": \" SipCreate\",\r\n  \"sip\" : \"elpepe\",\r\n  \"Data\": {\r\n    \"host\" : \"dynamic\",\r\n    \"secret\" : \"aula1234\",\r\n    \"context\" : \"default\",\r\n    \"type\" : \"friend\",\r\n    \"directmedia\" : \"no\",\r\n    \"disallow\" : \"all\",\r\n    \"allow\" : \"opus,ulaw\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/asterisk/SipCreate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"asterisk",
+						"SipCreate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateContext",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"type\": \"new\",\r\n  \"fileName\": \"extensions.api.conf\",\r\n  \"contextName\": \"TTS\",\r\n  \"extensionLines\": [\r\n    {\r\n      \"priority\": \"1\",\r\n      \"application\": \"NoOp\",\r\n      \"data\": \"Probamos el TTS\"\r\n    },\r\n    {\r\n      \"application\": \"AGI\",\r\n      \"data\": \"tts-elevenlabs.agi,${tts}\"\r\n    },\r\n    {\r\n      \"application\": \"DumpChan\"\r\n    },\r\n    {\r\n      \"application\": \"PlayBack\",\r\n      \"data\": \"mokeys\"\r\n    },\r\n    {\r\n      \"application\": \"Hangup\"\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/asterisk/CreateContext",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"asterisk",
+						"CreateContext"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ChangeLineContext",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"type\": \"change\",\r\n  \"fileName\": \"extensions.api.conf\",\r\n  \"contextName\": \"TTS\",\r\n  \"changes\": [\r\n    {\r\n      \"old\": { \"priority\": \"n\", \"application\": \"PlayBack\", \"data\": \"mokeys\" },\r\n      \"new\": { \"priority\": \"n\", \"application\": \"PlayBack\", \"data\": \"hello-world\" }\r\n    }\r\n    // Más cambios aquí\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/asterisk/CreateContext",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"asterisk",
+						"CreateContext"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteLineContext",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"type\": \"delete\",\r\n  \"fileName\": \"extensions.api.conf\",\r\n  \"contextName\": \"TTS\",\r\n  \"linesToDelete\": [\r\n    { \"priority\": \"n\", \"application\": \"PlayBack\", \"data\": \"hello-world\" },\r\n    { \"priority\": \"n\", \"application\": \"DumpChan\", \"data\": \"\" }\r\n    // Más líneas a eliminar aquí\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/asterisk/CreateContext",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"asterisk",
+						"CreateContext"
 					]
 				}
 			},

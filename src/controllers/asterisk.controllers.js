@@ -146,67 +146,92 @@ export const ActionAMI = async (ami, a) => {
     });
 };
 
-
-export const CreateContext = async (req, res) => {
+export const ManageContext = async (req, res) => {
     try {
-        const { contextName, extensionLines } = req.body;
+        const { type, fileName, contextName, extensionLines,changes, linesToDelete  } = req.body;
 
-        if (!contextName || !extensionLines || !Array.isArray(extensionLines)) {
-            throw new Error("Datos inválidos. Asegúrese de enviar un 'contextName' y un arreglo de 'extensionLines'.");
+        if (!type || !fileName || !contextName) {
+            throw new Error("Datos inválidos. Asegúrese de enviar los campos requeridos.");
         }
 
         const updateConfig = {
             Action: "UpdateConfig",
             reload: "yes",
-            srcfilename: "extensions.api.conf",
-            dstfilename: "extensions.api.conf",
-            "action-000000": "newcat",
-            "cat-000000": contextName
+            srcfilename: fileName,
+            dstfilename: fileName,
         };
 
-        let count = 1;
-        extensionLines.forEach(line => {
-            Object.assign(updateConfig, {
-                ["action-" + padLeadingZeros(count, 6)]: "append",
-                ["cat-" + padLeadingZeros(count, 6)]: contextName,
-                ["var-" + padLeadingZeros(count, 6)]: "exten",
-                ["value-" + padLeadingZeros(count, 6)]: line
-            });
-            count++;
-        });
+        switch (type) {
+            case "new":
+                updateConfig["action-000000"] = "newcat";
+                updateConfig["cat-000000"] = contextName;
+                extensionLines.forEach((line, index) => {
+                    const lineFormat = index === 0
+                        ? `s,${line.priority},${line.application}(${line.data || ''})`
+                        : `n,${line.application}(${line.data || ''})`;
+                    Object.assign(updateConfig, {
+                        ["action-" + padLeadingZeros(index + 1, 6)]: "append",
+                        ["cat-" + padLeadingZeros(index + 1, 6)]: contextName,
+                        ["var-" + padLeadingZeros(index + 1, 6)]: index === 0 ? "exten" : "same",
+                        ["value-" + padLeadingZeros(index + 1, 6)]: lineFormat
+                    });
+                });
+                break;
+
+            case "change":
+                changes.forEach((change, index) => {
+                    const oldLineFormat = `${change.old.priority},${change.old.application}(${change.old.data || ''})`;
+                    const newLineFormat = `${change.new.priority},${change.new.application}(${change.new.data || ''})`;
+                    Object.assign(updateConfig, {
+                        ["action-" + padLeadingZeros(index, 6)]: "update",
+                        ["cat-" + padLeadingZeros(index, 6)]: contextName,
+                        ["var-" + padLeadingZeros(index, 6)]: change.old.priority === "s" ? "exten" : "same",
+                        ["match-" + padLeadingZeros(index, 6)]: oldLineFormat,
+                        ["value-" + padLeadingZeros(index, 6)]: newLineFormat
+                    });
+                });
+                break;
+
+            case "delete":
+                linesToDelete.forEach((line, index) => {
+                    const lineFormat = `${line.priority},${line.application}(${line.data || ''})`;
+                    Object.assign(updateConfig, {
+                        ["action-" + padLeadingZeros(index, 6)]: "delete",
+                        ["cat-" + padLeadingZeros(index, 6)]: contextName,
+                        ["var-" + padLeadingZeros(index, 6)]: line.priority === "s" ? "exten" : "same",
+                        ["match-" + padLeadingZeros(index, 6)]: lineFormat
+                    });
+                });
+                break;
+
+            default:
+                throw new Error("Tipo de acción no reconocido.");
+        }
 
         console.log(updateConfig);
 
         let action = await ActionAMI(AMI, updateConfig);
-
         if (action.hasOwnProperty("response")) {
             res.json({ success: true, message: action, data: updateConfig });
-        }
-        else {
-            res.status(500).json({
-                success: false,
-                message: action,
-                data: updateConfig,
-            });
+        } else {
+            res.status(500).json({ success: false, message: action, data: updateConfig });
         }
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message || "Something goes wrong creating the TTS context",
-        });
+        res.status(500).json({ success: false, message: error.message || "Error al manejar el contexto" });
     }
 };
+
 
 
 export const SipReload = async () => {
     try {
         let a = {
-          Action: "Command",
-          Command: "sip reload",
+            Action: "Command",
+            Command: "sip reload",
         };
         let action = await ActionAMI(AMI, a);
         return action;
     } catch (error) {
-      return error;
+        return error;
     }
-  };
+};

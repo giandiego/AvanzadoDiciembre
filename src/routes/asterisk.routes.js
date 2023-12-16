@@ -6,7 +6,7 @@ const router = Router();
 router.post('/HacerUnaLlamada', asterisk.OriginateCall);
 router.post('/dialer', asterisk.DialerCalls);
 router.post('/SipCreate', asterisk.SipCreate);
-router.post('/CreateContext', asterisk.CreateContext);
+router.post('/CreateContext', asterisk.ManageContext);
 
 
 export default router;
