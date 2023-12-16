@@ -1,0 +1,72 @@
+{
+	"info": {
+		"_postman_id": "cbcd0fd5-1bcf-4cf7-80f8-c6d6a70113d8",
+		"name": "API_SIMPLE",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12373830"
+	},
+	"item": [
+		{
+			"name": "HacerLlamada",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"channel\": \"PJSIP/5000\",\r\n  \"context\": \"test-manager\",\r\n  \"exten\": \"s\",\r\n  \"priority\": 1,\r\n  \"callerid\" : \"el pepe <postman>\",\r\n  \"variables\": {\r\n    \"var1\": \"value1\",\r\n    \"var2\": \"value2\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/asterisk/HacerUnaLlamada",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"asterisk",
+						"HacerUnaLlamada"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Dialer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"action\": \"ListNumbers\",\r\n    \"numbers\": [\r\n        {\r\n            \"numero\": \"123\",\r\n            \"callerid\": \"123\"\r\n        },\r\n        {\r\n            \"numero\": \"321\",\r\n            \"callerid\": \"321\"\r\n        },\r\n        {\r\n            \"numero\": \"456\",\r\n            \"callerid\": \"456\"\r\n        }\r\n    ],\r\n    \"variables\": {\r\n        \"var1\": \"desde postman 1\",\r\n        \"var2\": \"desde postman 2\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/asterisk/dialer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"asterisk",
+						"dialer"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
