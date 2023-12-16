@@ -56,7 +56,7 @@ export const OriginateCall = async (req, res) => {
             'context': data.context,
             'exten': data.exten,
             'priority': data.priority,
-            'variable': data.variable,
+            'variable': data.variables,
             'callerid': data.callerid,
             'async': true,
         }
