@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "CursoAsterisk",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
   },
   "repository": {
     "type": "git",
@@ -19,5 +20,10 @@
   "bugs": {
     "url": "https://github.com/giandiego/AvanzadoDiciembre/issues"
   },
-  "homepage": "https://github.com/giandiego/AvanzadoDiciembre#readme"
+  "homepage": "https://github.com/giandiego/AvanzadoDiciembre#readme",
+  "dependencies": {
+    "asterisk-manager": "^0.2.0",
+    "dotenv": "^16.3.1",
+    "dotenv-expand": "^10.0.0"
+  }
 }
